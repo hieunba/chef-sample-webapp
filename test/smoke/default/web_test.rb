@@ -15,7 +15,7 @@ describe service('apache2-default') do
 end
 
 describe command 'wget -qSO- --spider localhost' do
-  its('stderr') { should match %r{HTTP/1\.1 200 OK } }
+  its('stderr') { should match %r{HTTP\/1.1 200 OK} }
 end
 
 describe port 80 do
