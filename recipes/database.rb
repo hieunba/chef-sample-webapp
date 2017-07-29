@@ -5,6 +5,15 @@
 # Copyright:: 2017, The Authors, All Rights Reserved.
 passwords = data_bag_item('passwords', 'mysql')
 
+mysql_connection_info = {
+  host: '127.0.0.1',
+  username: 'root',
+  password: passwords['root_password']
+}
+mysql2_chef_gem 'default' do
+  action :install
+end
+
 mysql_client 'default' do
   action :create
 end
@@ -14,3 +23,16 @@ mysql_service 'default' do
   action [:create, :start]
 end
 
+# Create a database instance
+mysql_database node['lamp']['database']['db_name'] do
+  connection mysql_connection_info
+  action :create
+end
+
+mysql_database_user node['lamp']['database']['admin_username'] do
+  connection mysql_connection_info
+  password passwords['admin_password']
+  database_name node['lamp']['database']['dbname']
+  host '127.0.0.1'
+  action [:create, :grant]
+end 
